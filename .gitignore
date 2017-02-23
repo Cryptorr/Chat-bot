@@ -1,0 +1,5 @@
+clinton-trump-corpus/Clinton/Clinton_2016-07-28.txt
+*.txt
+*.DS_Store
+*.xml
+.idea/Chat-bot.iml
