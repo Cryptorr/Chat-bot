@@ -7,12 +7,14 @@ import json
 import requests
 import time
 import urllib
+import numpy
+import spacy
 # python3: urllib.parse.quote_plus
 # python2: urllib.pathname2url
 
 TOKEN = "287236464:AAFK-tgprVoLUfSzDl96SkxNK-w7lw77_Lg" # don't put this in your repo! (put in config, then import config)
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
-
+nlp = spacy.load('en')
 
 def get_url(url):
     response = requests.get(url)
@@ -41,6 +43,12 @@ def get_last_update_id(updates):
     return max(update_ids)
 
 
+def answer_all(updates):
+    for update in updates["result"]:
+        text = update["message"]["text"]
+        chat = update["message"]["chat"]["id"]
+        send_message(text, chat)
+
 def echo_all(updates):
     for update in updates["result"]:
         text = update["message"]["text"]
@@ -57,7 +65,10 @@ def get_last_chat_id_and_text(updates):
 
 
 def send_message(text, chat_id):
-    text = urllib.pathname2url(text) # urllib.parse.quote_plus(text) # (python3)
+    vec = nlp(text)
+    target = nlp(u"What is the weather in Nijmegen?")
+    sim = vec.similarity(target)
+    text = urllib.pathname2url(repr(sim)) # urllib.parse.quote_plus(text) # (python3)
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
     get_url(url)
 
@@ -68,7 +79,7 @@ def main():
         updates = get_updates(last_update_id)
         if len(updates["result"]) > 0:
             last_update_id = get_last_update_id(updates) + 1
-            echo_all(updates)
+            answer_all(updates)
         time.sleep(0.5)
 
 
