@@ -104,18 +104,6 @@ def send_message(text, chat_id):
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
     get_url(url)
 
-def weather_response(updates):
-    for update in updates["result"]:
-        chat = update["message"]["chat"]["id"]
-        city = "Nijmegen"
-        forecast = weather(city)
-        temp = int(round(forecast["main"]["temp"]-273.15)) # temperature is in Kelvin
-        sky = forecast["weather"][0]["main"].lower()
-        message_weather = "The temperature in {} is {} degrees Celsius. The sky is filled with {}.".format(city, temp, sky)
-        message_temp = "The temperature in {} is {} degrees Celsius.".format(city, temp)
-        message_sky = "The sky in {} is filled with {}.".format(city, sky)
-        send_message(message_weather, chat)
-
 def main():
     last_update_id = None
     while True:
