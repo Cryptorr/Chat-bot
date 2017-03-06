@@ -77,11 +77,44 @@ def send_message(text, chat_id):
         score.append(sim)
         if sim >= score[max]:
             max = i
-    response = textcomp[max] + ' ' + repr(score[max])
+    response = ''
+
+    if score[max] > 0.5:
+        if max == 0:
+            response = "Hi! I'm Weather Bot."
+        elif max == 1:
+            response = "I'm fine. How are you?"
+        else:
+            if len(places.cities) > 0:
+                city = places.cities[0]
+                forecast = weather(city)
+                if max == 2:
+                    sky = forecast["weather"][0]["main"].lower()
+                    response = "The sky in {} is filled with {}.".format(city, sky)
+                elif max == 3:
+                    temp = int(round(forecast["main"]["temp"] - 273.15))  # temperature is in Kelvin
+                    response = "The temperature in {} is {} degrees Celsius.".format(city, temp)
+            else:
+                response = "For what city do you want to know the weather?"
+    else:
+        response = "Sorry, I don't get what you're saying."
+
+
     text = urllib.pathname2url(response) # urllib.parse.quote_plus(text) # (python3)
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
     get_url(url)
 
+def weather_response(updates):
+    for update in updates["result"]:
+        chat = update["message"]["chat"]["id"]
+        city = "Nijmegen"
+        forecast = weather(city)
+        temp = int(round(forecast["main"]["temp"]-273.15)) # temperature is in Kelvin
+        sky = forecast["weather"][0]["main"].lower()
+        message_weather = "The temperature in {} is {} degrees Celsius. The sky is filled with {}.".format(city, temp, sky)
+        message_temp = "The temperature in {} is {} degrees Celsius.".format(city, temp)
+        message_sky = "The sky in {} is filled with {}.".format(city, sky)
+        send_message(message_weather, chat)
 
 def main():
     last_update_id = None
