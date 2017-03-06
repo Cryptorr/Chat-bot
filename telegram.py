@@ -17,7 +17,7 @@ nlp = spacy.load('en')
 
 TOKEN = "287236464:AAFK-tgprVoLUfSzDl96SkxNK-w7lw77_Lg" # don't put this in your repo! (put in config, then import config)
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
-textcomp = [u'hello', u'how are you', u'weather in London']
+textcomp = [u'hello', u'how are you', u'weather in London', u'temperature in London']
 
 def weather(city):
     url = "http://api.openweathermap.org/data/2.5/weather?q={}&appid=385960ef90069e839464dbf900cbf5ed".format(city)
@@ -68,7 +68,7 @@ def get_last_chat_id_and_text(updates):
 
 def send_message(text, chat_id):
     doc = nlp(text)
-    places = GeoText(str(text))
+    places = GeoText(text)
     print places.cities
     score = []
     max = 0
