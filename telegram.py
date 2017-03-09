@@ -12,15 +12,20 @@ import spacy
 from geotext import GeoText
 # python3: urllib.parse.quote_plus
 # python2: urllib.pathname2url
+import ConfigParser
+
+c = ConfigParser.ConfigParser(allow_no_value=True)
+c.read("keys.ini")
 
 nlp = spacy.load('en')
 
-TOKEN = "287236464:AAFK-tgprVoLUfSzDl96SkxNK-w7lw77_Lg" # don't put this in your repo! (put in config, then import config)
-URL = "https://api.telegram.org/bot{}/".format(TOKEN)
+TGTOKEN = c.get("APIKEYS", "telegram")
+OWTOKEN = c.get("APIKEYS", "openweatherapi")
+URL = "https://api.telegram.org/bot{}/".format(TGTOKEN)
 textcomp = [u'hello', u'how are you doing', u'thank you', u'what is the weather in London', u'warm cold hot temperature in London?']
 
 def weather(city):
-    url = "http://api.openweathermap.org/data/2.5/weather?q={}&appid=385960ef90069e839464dbf900cbf5ed".format(city)
+    url = "http://api.openweathermap.org/data/2.5/weather?q={}&appid={}".format(city,OWTOKEN)
     forecast = get_json_from_url(url)
     #print forecast
     return forecast
