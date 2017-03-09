@@ -17,7 +17,7 @@ nlp = spacy.load('en')
 
 TOKEN = "287236464:AAFK-tgprVoLUfSzDl96SkxNK-w7lw77_Lg" # don't put this in your repo! (put in config, then import config)
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
-textcomp = [u'hello', u'how are you doing', u'thank you', u'what is the weather in London', u'warm cold hot temperature in London?']
+textcomp = [u'hello', u'how are you doing', u'thank you', u'what is the weather in London', u'warm cold hot temperature in London?', u'wind speed velocity in London?']
 
 def weather(city):
     url = "http://api.openweathermap.org/data/2.5/weather?q={}&appid=385960ef90069e839464dbf900cbf5ed".format(city)
@@ -30,12 +30,10 @@ def get_url(url):
     content = response.content.decode("utf8")
     return content
 
-
 def get_json_from_url(url):
     content = get_url(url)
     js = json.loads(content)
     return js
-
 
 def get_updates(offset=None):
     url = URL + "getUpdates"
@@ -44,13 +42,11 @@ def get_updates(offset=None):
     js = get_json_from_url(url)
     return js
 
-
 def get_last_update_id(updates):
     update_ids = []
     for update in updates["result"]:
         update_ids.append(int(update["update_id"]))
     return max(update_ids)
-
 
 def answer_all(updates):
     for update in updates["result"]:
@@ -64,7 +60,6 @@ def get_last_chat_id_and_text(updates):
     text = updates["result"][last_update]["message"]["text"]
     chat_id = updates["result"][last_update]["message"]["chat"]["id"]
     return (text, chat_id)
-
 
 def send_message(text, chat_id):
     doc = nlp(text)
@@ -100,11 +95,14 @@ def send_message(text, chat_id):
                     elif max == 4:
                         temp = int(round(forecast["main"]["temp"] - 273.15))  # temperature is in Kelvin
                         response += "The temperature in {} is {} degrees Celsius. ".format(city, temp)
+                    elif max == 5:
+                        wind = forecast["wind"]["speed"]
+                        wind_km = wind * 3.6
+                        response += "The wind speed in {} is {} meters per second. That is {} kilometers per hour.".format(city, wind, wind_km)
             else:
                 response += "For what city do you want to know the weather? "
     else:
         response += "Sorry, I don't get what you're saying. "
-
 
     text = urllib.quote_plus(response) # urllib.parse.quote_plus(text) # (python3)
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
@@ -119,7 +117,6 @@ def main():
             last_update_id = get_last_update_id(updates) + 1
             answer_all(updates)
         time.sleep(0.5)
-
 
 if __name__ == '__main__':
     main()
