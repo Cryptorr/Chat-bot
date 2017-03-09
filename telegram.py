@@ -17,7 +17,7 @@ nlp = spacy.load('en')
 
 TOKEN = "287236464:AAFK-tgprVoLUfSzDl96SkxNK-w7lw77_Lg" # don't put this in your repo! (put in config, then import config)
 URL = "https://api.telegram.org/bot{}/".format(TOKEN)
-textcomp = [u'hello', u'how are you', u'weather in London', u'temperature in London']
+textcomp = [u'hello', u'how are you doing', u'thank you', u'what is the weather in London', u'warm cold hot temperature in London?']
 
 def weather(city):
     url = "http://api.openweathermap.org/data/2.5/weather?q={}&appid=385960ef90069e839464dbf900cbf5ed".format(city)
@@ -69,7 +69,10 @@ def get_last_chat_id_and_text(updates):
 def send_message(text, chat_id):
     doc = nlp(text)
     places = GeoText(text)
-    print places.cities
+    if (len(places.cities)>0):
+        for city in places.cities:
+            text = text.replace(city, "London");
+        doc = nlp(text)
     score = []
     max = 0
     for i, test in enumerate(textcomp):
@@ -77,35 +80,39 @@ def send_message(text, chat_id):
         score.append(sim)
         if sim >= score[max]:
             max = i
+    print score
     response = ''
 
     if score[max] > 0.5:
         if max == 0:
-            response = "Hi! I'm Weather Bot."
+            response += "Hi! I'm Weather Bot. You can ask me questions about the weather in a particular city. "
         elif max == 1:
-            response = "I'm fine. How are you?"
+            response += "I'm fine. "
+        elif max == 2:
+            response += "You're welcome! "
         else:
             if len(places.cities) > 0:
-                city = places.cities[0]
-                forecast = weather(city)
-                if max == 2:
-                    sky = forecast["weather"][0]["main"].lower()
-                    response = "The sky in {} is filled with {}.".format(city, sky)
-                elif max == 3:
-                    temp = int(round(forecast["main"]["temp"] - 273.15))  # temperature is in Kelvin
-                    response = "The temperature in {} is {} degrees Celsius.".format(city, temp)
+                for city in places.cities:
+                    forecast = weather(city)
+                    if max == 3:
+                        sky = forecast["weather"][0]["main"].lower()
+                        response += "The weather in {}: {}. ".format(city, sky)
+                    elif max == 4:
+                        temp = int(round(forecast["main"]["temp"] - 273.15))  # temperature is in Kelvin
+                        response += "The temperature in {} is {} degrees Celsius. ".format(city, temp)
             else:
-                response = "For what city do you want to know the weather?"
+                response += "For what city do you want to know the weather? "
     else:
-        response = "Sorry, I don't get what you're saying."
+        response += "Sorry, I don't get what you're saying. "
 
 
-    text = urllib.pathname2url(response) # urllib.parse.quote_plus(text) # (python3)
+    text = urllib.quote_plus(response) # urllib.parse.quote_plus(text) # (python3)
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
     get_url(url)
 
 def main():
     last_update_id = None
+    print "Start"
     while True:
         updates = get_updates(last_update_id)
         if len(updates["result"]) > 0:
