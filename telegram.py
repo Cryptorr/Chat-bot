@@ -19,16 +19,10 @@ c.read("keys.ini")
 
 nlp = spacy.load('en')
 
-<<<<<<< HEAD
 TGTOKEN = c.get("APIKEYS", "telegram")
 OWTOKEN = c.get("APIKEYS", "openweatherapi")
 URL = "https://api.telegram.org/bot{}/".format(TGTOKEN)
-textcomp = [u'hello', u'how are you doing', u'thank you', u'what is the weather in London', u'warm cold hot temperature in London?']
-=======
-TOKEN = "287236464:AAFK-tgprVoLUfSzDl96SkxNK-w7lw77_Lg" # don't put this in your repo! (put in config, then import config)
-URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 textcomp = [u'hello', u'how are you doing', u'thank you', u'what is the weather in London', u'warm cold hot temperature in London?', u'wind speed velocity in London?']
->>>>>>> origin/master
 
 def weather(city):
     url = "http://api.openweathermap.org/data/2.5/weather?q={}&appid={}".format(city,OWTOKEN)
