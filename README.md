@@ -1,6 +1,8 @@
 
 ### WEATHER BOT
 ##### By Sven den Hartog & Johanna de Vos
+##### Cognitive Computational Modeling of Language and Web Interaction
+##### 10 March 2017
 
 Our bot can be found [here](https://web.telegram.org/#/im?p=@to_do4325q5_bot). You can talk to it about the weather in over 200,000 cities around the world. We'll describe the steps we took in creating the weather bot here.
 
