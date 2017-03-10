@@ -1,13 +1,12 @@
-# test
-# basic telegram bot
-# https://www.codementor.io/garethdwyer/building-a-telegram-bot-using-python-part-1-goi5fncay
+# Telegram Weather Bot
+# By Sven den Hartog & Johanna de Vos
+# Based on: https://www.codementor.io/garethdwyer/building-a-telegram-bot-using-python-part-1-goi5fncay
 # https://github.com/sixhobbits/python-telegram-tutorial/blob/master/part1/echobot.py
 
 import json 
 import requests
 import time
 import urllib
-import numpy
 import spacy
 from geotext import GeoText
 # python3: urllib.parse.quote_plus
@@ -22,7 +21,7 @@ nlp = spacy.load('en')
 TGTOKEN = c.get("APIKEYS", "telegram")
 OWTOKEN = c.get("APIKEYS", "openweatherapi")
 URL = "https://api.telegram.org/bot{}/".format(TGTOKEN)
-textcomp = [u'hello', u'how are you doing', u'thank you', u'what is the weather in London', u'warm cold hot temperature in London?', u'wind speed velocity in London?']
+textcomp = [u'hello', u'how are you doing?', u'thank you', u'what is the weather in London?', u'warm cold hot temperature in London?', u'wind speed force velocity in London?']
 
 def weather(city):
     url = "http://api.openweathermap.org/data/2.5/weather?q={}&appid={}".format(city,OWTOKEN)
@@ -96,7 +95,7 @@ def send_message(text, chat_id):
                     forecast = weather(city)
                     if max == 3:
                         sky = forecast["weather"][0]["main"].lower()
-                        response += "The weather in {}: {}. ".format(city, sky)
+                        response += "The weather in {}: {}.".format(city, sky)
                     elif max == 4:
                         temp = int(round(forecast["main"]["temp"] - 273.15))  # temperature is in Kelvin
                         response += "The temperature in {} is {} degrees Celsius. ".format(city, temp)
