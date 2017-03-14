@@ -1,63 +1,78 @@
-# WEATHER BOT
-# By Sven den Hartog & Johanna de Vos
 
-Our bot can be found here: https://web.telegram.org/#/im?p=@to_do4325q5_bot
-You can talk to it about the weather in over 200,000 cities around the world.
+### WEATHER BOT
+##### By Sven den Hartog & Johanna de Vos
+##### Cognitive Computational Modeling of Language and Web Interaction
+##### 10 March 2017
 
-We'll now describe the steps we took in creating the weather bot
+Our bot can be found [here](https://web.telegram.org/#/im?p=@to_do4325q5_bot). You can talk to it about the weather in over 200,000 cities around the world. We'll describe the steps we took in creating the weather bot here.
 
-1) CREATE ECHO BOT
-We followed an online tutorial to get the bot working in a basic version.
-This created an 'echo bot', that just echoes whatever you say to it.
-This is the link: https://www.codementor.io/garethdwyer/building-a-telegram-bot-using-python-part-1-goi5fncay
+1. CREATE ECHO BOT
+We followed an [online tutorial](https://www.codementor.io/garethdwyer/building-a-telegram-bot-using-python-part-1-goi5fncay) to get the bot working in a basic version. This created an 'echo bot', that just echoes whatever you say to it.
 
-2) GET WEATHER DATA
-Using the get_json_from_url function that was part of the above tutorial,
-we can scrape data from the OpenWeatherMap API.
-When a request for weather information in a particular city is made to the chatbot,
-the following information is downloaded:
+2. GET WEATHER DATA
+Using the _get_json_from_url_ function that was part of the above tutorial, we can scrape data from the _OpenWeatherMap_ API. When a request for weather information in a particular city is made to the chatbot, the following information is downloaded:
 
-{"coord":{"lon":5.85,"lat":51.84},"weather":[{"id":803,"main":"Clouds","description":"broken clouds","icon":"04d"}],
-"base":"stations","main":{"temp":285.41,"pressure":1018,"humidity":62,"temp_min":284.15,"temp_max":286.15},
-"visibility":10000,"wind":{"speed":7.7,"deg":280,"gust":12.9},"clouds":{"all":75},"dt":1489071600,"sys":{"type":1,"id":5219,
-"message":0.0549,"country":"NL","sunrise":1489039366,"sunset":1489080718},"id":2750053,"name":"Nijmegen","cod":200} 
+ > {u'base': u'stations',
+ u'clouds': {u'all': 40},
+ u'cod': 200,
+ u'coord': {u'lat': 51.84, u'lon': 5.85},
+ u'dt': 1489138860,
+ u'id': 2750053,
+ u'main': {u'humidity': 75,
+  u'pressure': 1029,
+  u'temp': 280.14,
+  u'temp_max': 281.15,
+  u'temp_min': 279.15},
+ u'name': u'Nijmegen',
+ u'sys': {u'country': u'NL',
+  u'id': 5219,
+  u'message': 0.0031,
+  u'sunrise': 1489125660,
+  u'sunset': 1489167200,
+  u'type': 1},
+ u'visibility': 10000,
+ u'weather': [{u'description': u'scattered clouds',
+   u'icon': u'03d',
+   u'id': 802,
+   u'main': u'Clouds'}],
+ u'wind': {u'deg': 240, u'speed': 2.1}}
 
-From this, we extract the temperature (in Kelvin) and the weather 'type' (e.g. sun, rain, clouds, etc.)
+ From this, we extract the temperature (in Kelvin), the weather 'type' (e.g. sun, rain, clouds, etc.), and the wind speed.
 
-3) PROCESS AND INTERPRET THE USER MESSAGE
-For this part we used the Python libraries spaCy (version 1.6) and geotext (version 0.2.0).
-The user input was transformed into a spaCy doc object.
-From this doc, the city name was extracted by performing named-entity recognition with geotext.
+3. PROCESS AND INTERPRET THE USER MESSAGE
+For this part we used the Python libraries _spaCy_ (version 1.6) and _geotext_ (version 0.2.0). The user input was transformed into a spaCy doc object. From this doc, the city name was extracted by performing named-entity recognition with geotext.
 
-To interpret the user message, we compared it to four pre-defined messages:
-[u'hello', u'how are you', u'weather in London', u'temperature in London']
-Using word2vec, spaCy calculates a vector representation for each word, 
-and then returns an average of these vectors to represent the entire input sequence.
-The similarity function computes the cosine similarity between the vector representing the user input,
-and each of the vectors representing the four pre-defined messages.
-The pre-defined message which scores highest in similarity to the user message,
-will inform the response of the weather bot.
+ To interpret the user message, we compared it to six pre-defined messages:
+>(1) u'hello'
+>(2) u'how are you doing?'
+>(3) u'thank you',
+>(4) u'what is the weather in London?', 
+>(5) u'warm cold hot temperature in London?'
+>(6) u'wind speed force velocity in London?'
 
-4) REPLY
-This is the bot's response to each of the four pre-defined messages:
-'hello' --> "Hi! I'm Weather Bot. You can ask me questions about the weather in a particular city."
-'how are you' --> "I'm fine. How are you?"
-'weather in London' --> "The weather in {} is {}" (first empty space is city, second is weather type, e.g. 'sun' or 'rain')
-'temperature in London' --> "The temperature in {} is {} degrees Celsius." (first empty space is city, second is temperature)
+ Using _word2vec_, spaCy calculates a vector representation for each word, and then returns an average of these vectors to represent the entire input sequence. The similarity function computes the cosine similarity between the vector representing the user input, and each of the vectors representing the six pre-defined messages. The pre-defined message which scores highest in similarity to the user message, will inform the response of the weather bot.
 
-The bot only gives any of the above responses if the cosine similarity was higher than 0.5.
+4. REPLY
+This is the bot's response to each of the six pre-defined messages:
+> (1) "Hi! I'm Weather Bot. You can ask me questions about the weather in a particular city."
+(2) "I'm fine."
+(3) "You're welcome!"
+(4) "The weather in {}: {}."
+(5) "The temperature in {} is {} degrees Celsius."
+(6) "The wind speed in {} is {} meters per second. That is {} kilometers per hour."
+
+ The bot only gives any of the above responses if the cosine similarity was higher than 0.5.
 Otherwise, it responds: "Sorry, I don't get what you're saying."
 
-If the match to 'weather in London' or 'temperature in London' was higher than 0.5, but no city name could be detected,
-the bot responds: "For what city do you want to know the weather?"
+ If the match to 'weather in London' or 'temperature in London' was higher than 0.5, but no city name could be detected, the bot responds: "For what city do you want to know the weather?"
 
-5) EXAMPLE
+5. EXAMPLE
 
 
-6) POINTS FOR IMPROVEMENT
-- The recognition of city names doesn't work well when the city is not capitalized (or when everything is capitalized).
-  This seems to be a shortcoming of the geotext library.
+6. POINTS FOR IMPROVEMENT
+* The recognition of city names doesn't work well when the city is not capitalized (or when everything is capitalized). This seems to be a shortcoming of the geotext library.
   
-- The bot is currently very basic, giving [xx] different responses only.
-  It should be relatively easy to implement more different weather queries, or more chit-chat,
-  by adding more pre-defined input.
+* The bot is currently very basic, giving six different responses only. It should be relatively easy to implement more different weather queries, or more chit-chat, by adding more pre-defined input.
+
+
+> Written with [StackEdit](https://stackedit.io/).
