@@ -21,11 +21,7 @@ nlp = spacy.load('en')
 TGTOKEN = c.get("APIKEYS", "telegram")
 OWTOKEN = c.get("APIKEYS", "openweatherapi")
 URL = "https://api.telegram.org/bot{}/".format(TGTOKEN)
-<<<<<<< HEAD
 textcomp = [u'hello', u'how are you doing', u'thank you', u'what is the weather in London', u'what is the temperature warm cold hot in London?', u'what is the wind speed velocity in London?']
-=======
-textcomp = [u'hello', u'how are you doing?', u'thank you', u'what is the weather in London?', u'warm cold hot temperature in London?', u'wind speed force velocity in London?']
->>>>>>> origin/master
 
 def weather(city):
     url = "http://api.openweathermap.org/data/2.5/weather?q={}&appid={}".format(city,OWTOKEN)

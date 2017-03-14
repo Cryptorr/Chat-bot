@@ -67,7 +67,30 @@ Otherwise, it responds: "Sorry, I don't get what you're saying."
  If the match to 'weather in London' or 'temperature in London' was higher than 0.5, but no city name could be detected, the bot responds: "For what city do you want to know the weather?"
 
 5. EXAMPLE
-
+**Sven:**
+Hello Weather Bot
+**Weather Bot:**
+Hi! I'm Weather Bot. You can ask me questions about the weather in a particular city.
+**Sven:**
+How are you
+**Weather Bot:**
+I'm fine.
+**Sven:**
+What can you tell me about the weather in Nijmegen
+**Weather Bot:**
+The weather in Nijmegen: mist.
+**Sven:**
+And how warm is it in Amsterdam?
+**Weather Bot:**
+The temperature in Amsterdam is 8 degrees Celsius.
+**Sven:**
+Alright, and what about the wind speed in Maastricht?
+**Weather Bot:**
+The wind speed in Maastricht is 3.1 meters per second. That is 11.16 kilometers per hour.
+**Sven:**
+Thanks!
+**Weather Bot:**
+You're welcome!
 
 6. POINTS FOR IMPROVEMENT
 * The recognition of city names doesn't work well when the city is not capitalized (or when everything is capitalized). This seems to be a shortcoming of the geotext library.
