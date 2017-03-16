@@ -47,8 +47,8 @@ For this part we used the Python libraries _spaCy_ (version 1.6) and _geotext_ (
 >(2) u'how are you doing?'
 >(3) u'thank you',
 >(4) u'what is the weather in London?',
->(5) u'what is the temperature warm cold hot temperature in London?'
->(6) u'what is the wind speed force velocity in London?'
+>(5) u'what is the temperature in London?'
+>(6) u'what is the wind speed in London?'
 
  Using _word2vec_, spaCy calculates a vector representation for each word, and then returns an average of these vectors to represent the entire input sequence. The similarity function computes the cosine similarity between the vector representing the user input, and each of the vectors representing the six pre-defined messages. The pre-defined message which scores highest in similarity to the user message, will inform the response of the weather bot.
 
