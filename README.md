@@ -2,7 +2,7 @@
 ### WEATHER BOT
 ##### By Sven den Hartog & Johanna de Vos
 ##### Cognitive Computational Modeling of Language and Web Interaction
-##### 10 March 2017
+##### 15 March 2017
 
 Our bot can be found [here](https://web.telegram.org/#/im?p=@to_do4325q5_bot). You can talk to it about the weather in over 200,000 cities around the world. We'll describe the steps we took in creating the weather bot here.
 
@@ -10,7 +10,7 @@ Our bot can be found [here](https://web.telegram.org/#/im?p=@to_do4325q5_bot). Y
 We followed an [online tutorial](https://www.codementor.io/garethdwyer/building-a-telegram-bot-using-python-part-1-goi5fncay) to get the bot working in a basic version. This created an 'echo bot', that just echoes whatever you say to it.
 
 2. GET WEATHER DATA
-Using the _get_json_from_url_ function that was part of the above tutorial, we can scrape data from the _OpenWeatherMap_ API. When a request for weather information in a particular city is made to the chatbot, the following information is downloaded:
+Using the _get_json_from_url_ function that was part of the above tutorial, we can scrape data from the _OpenWeatherMap_ [API](https://openweathermap.org/api). When a request for weather information in a particular city is made to the chatbot, the following information is downloaded:
 
  > {u'base': u'stations',
  u'clouds': {u'all': 40},
@@ -47,8 +47,8 @@ For this part we used the Python libraries _spaCy_ (version 1.6) and _geotext_ (
 >(2) u'how are you doing?'
 >(3) u'thank you',
 >(4) u'what is the weather in London?',
->(5) u'warm cold hot temperature in London?'
->(6) u'wind speed force velocity in London?'
+>(5) u'what is the temperature warm cold hot temperature in London?'
+>(6) u'what is the wind speed force velocity in London?'
 
  Using _word2vec_, spaCy calculates a vector representation for each word, and then returns an average of these vectors to represent the entire input sequence. The similarity function computes the cosine similarity between the vector representing the user input, and each of the vectors representing the six pre-defined messages. The pre-defined message which scores highest in similarity to the user message, will inform the response of the weather bot.
 
@@ -61,10 +61,9 @@ This is the bot's response to each of the six pre-defined messages:
 (5) "The temperature in {} is {} degrees Celsius."
 (6) "The wind speed in {} is {} meters per second. That is {} kilometers per hour."
 
- The bot only gives any of the above responses if the cosine similarity was higher than 0.5.
-Otherwise, it responds: "Sorry, I don't get what you're saying."
+ The bot only gives any of the above responses if the cosine similarity was higher than 0.5. Otherwise, it responds: "Sorry, I don't get what you're saying."
 
- If the match to 'weather in London' or 'temperature in London' was higher than 0.5, but no city name could be detected, the bot responds: "For what city do you want to know the weather?"
+ If the match to pre-defined statements 4, 5 or 6 was higher than 0.5, but no city name could be detected, the bot responds: "For what city do you want to know the weather?"
 
 5. EXAMPLE
 * **Sven:**
